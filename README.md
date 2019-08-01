@@ -1,5 +1,7 @@
-# Node.js and Express Tutorial: Building and Securing RESTful APIs
+# The OpenID Connect Handbook
 
-In this article, you will learn how to develop RESTful APIs with Node.js, Express, and Auth0. You will start from scratch, scaffolding a new Node.js project, then you will go through all the steps needed to build a secure API.
+This repository is a sample Node.js and Express API that is secured with OAuth 2.0. The API was created to help the community learn about OpenID Connect and OAuth 2.0 and is part of The OpenID Connect Handbook.
 
-Read more at: https://auth0.com/blog/node-js-and-express-tutorial-building-and-securing-restful-apis/
+You can find the handbook here: https://auth0.com/resources/ebooks/the-openid-connect-handbook
+
+Have fun!
