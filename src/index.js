@@ -7,15 +7,19 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const { startDatabase } = require('./database/mongo');
-const {
-  insertToDo,
-  getToDos,
-  deleteToDo,
-  updateToDo
-} = require('./database/to-dos');
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
+
+// in-memory "database"
+let toDos = [
+  { id: 1, title: 'Buy Pizza', description: 'Ask for double pepperoni.' },
+  { id: 2, title: 'Pay Bills', description: 'They never stop coming.' },
+  {
+    id: 3,
+    title: 'Submit Expenses',
+    description: 'I still have to submit the expenses for that business trip.'
+  }
+];
 
 // defining the Express app
 const app = express();
@@ -46,46 +50,45 @@ const checkJwt = jwt({
   algorithms: ['RS256']
 });
 
-app.use(checkJwt);
+// app.use(checkJwt);
 
 function hasScope(scope) {
   return function(req, res, next) {
-    console.log(req.user);
-    const { scopes } = req.user;
-    const scopeArray = scopes.split(' ');
-    if (!scopeArray.includes(scope)) return res.status(403).send();
+    // const { scopes } = req.user;
+    // const scopeArray = scopes.split(' ');
+    // if (!scopeArray.includes(scope)) return res.status(403).send();
     next();
   };
 }
 
 // endpoint to return all to dos
-app.get('/', hasScope('read:to-dos'), async (req, res) => {
-  res.send(await getToDos());
+app.get('/', hasScope('read:to-dos'), (req, res) => {
+  res.send(toDos);
 });
 
-app.post('/', hasScope('create:to-dos'), async (req, res) => {
-  const newToDo = req.body;
-  await insertToDo(newToDo);
+app.post('/', hasScope('create:to-dos'), (req, res) => {
+  toDos.push(req.body);
   res.send({ message: 'New to-do item inserted.' });
 });
 
 // endpoint to delete a to-do
 app.delete('/:id', hasScope('delete:to-dos'), async (req, res) => {
-  await deleteToDo(req.params.id);
+  toDos = toDos.filter(element => element.id !== parseInt(req.params.id));
   res.send({ message: 'To-do item removed.' });
 });
 
 // endpoint to update a to-do item
 app.put('/:id', hasScope('update:to-dos'), async (req, res) => {
-  const updatedToDo = req.body;
-  await updateToDo(req.params.id, updatedToDo);
+  const updatedToDo = toDos.find(
+    element => element.id === parseInt(req.params.id)
+  );
+  if (!updatedToDo) return res.status(404).send();
+  updatedToDo.title = req.body.title;
+  updatedToDo.description = req.body.description;
   res.send({ message: 'To-do item updated.' });
 });
 
-// start the in-memory MongoDB instance
-startDatabase().then(() => {
-  // start the server
-  app.listen(process.env.PORT || 3001, async () => {
-    console.log(`listening on port ${process.env.PORT || '3001'}`);
-  });
+// start the server
+app.listen(process.env.PORT || 3001, async () => {
+  console.log(`listening on port ${process.env.PORT || '3001'}`);
 });
