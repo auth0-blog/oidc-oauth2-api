@@ -6,7 +6,14 @@
   "scripts": {
     "start": "node src"
   },
-  "keywords": ["OAuth 2.0", "OpenID Connect", "The OpenID Connect Handbook", "API", "Node.js", "Express"],
+  "keywords": [
+    "OAuth 2.0",
+    "OpenID Connect",
+    "The OpenID Connect Handbook",
+    "API",
+    "Node.js",
+    "Express"
+  ],
   "author": "Bruno Krebs <krebs.bruno@gmail.com>",
   "license": "MIT",
   "dependencies": {
@@ -16,9 +23,26 @@
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
     "helmet": "^3.15.1",
+    "husky": "^3.0.2",
     "jwks-rsa": "^1.4.0",
+    "lint-staged": "^9.2.1",
     "mongodb": "^3.1.13",
     "mongodb-memory-server": "^3.1.1",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "prettier": "^1.18.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true
   }
 }

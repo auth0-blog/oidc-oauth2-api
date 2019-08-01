@@ -7,8 +7,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const {startDatabase} = require('./database/mongo');
-const {insertToDo, getToDos, deleteToDo, updateToDo} = require('./database/to-dos');
+const { startDatabase } = require('./database/mongo');
+const {
+  insertToDo,
+  getToDos,
+  deleteToDo,
+  updateToDo
+} = require('./database/to-dos');
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 
@@ -44,13 +49,13 @@ const checkJwt = jwt({
 app.use(checkJwt);
 
 function hasScope(scope) {
-  return function (req, res, next) {
+  return function(req, res, next) {
     console.log(req.user);
-    const {scopes} = req.user;
+    const { scopes } = req.user;
     const scopeArray = scopes.split(' ');
     if (!scopeArray.includes(scope)) return res.status(403).send();
     next();
-  }
+  };
 }
 
 // endpoint to return all to dos
