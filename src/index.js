@@ -50,13 +50,15 @@ const checkJwt = jwt({
   algorithms: ['RS256']
 });
 
-// app.use(checkJwt);
+app.use(checkJwt);
 
-function hasScope(scope) {
+function hasScope(requiredScope) {
   return function(req, res, next) {
-    // const { scopes } = req.user;
-    // const scopeArray = scopes.split(' ');
-    // if (!scopeArray.includes(scope)) return res.status(403).send();
+    const { scope } = req.user;
+    const scopeArray = scope.split(' ');
+    if (!scopeArray.includes(requiredScope)) {
+      return res.status(403).send({ message: 'Insufficient authorization.' });
+    }
     next();
   };
 }
