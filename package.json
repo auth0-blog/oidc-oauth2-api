@@ -7,7 +7,7 @@
     "start": "node src"
   },
   "keywords": ["OAuth 2.0", "OpenID Connect", "The OpenID Connect Handbook", "API", "Node.js", "Express"],
-  "author": "Bruno Krebs",
+  "author": "Bruno Krebs <krebs.bruno@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.3",
